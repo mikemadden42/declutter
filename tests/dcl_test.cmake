@@ -35,6 +35,13 @@ elseif (CASE STREQUAL "trailing_dot")
     foreach (f foo. bar)
         file(WRITE "${fixture}/${f}" "")
     endforeach()
+    # Windows strips trailing dots from filenames, so "foo." becomes "foo".
+    file(GLOB created RELATIVE "${fixture}" "${fixture}/*")
+    list(FIND created "foo." found)
+    if (found EQUAL -1)
+        message("SKIPPED: filesystem does not allow a trailing dot: ${created}")
+        return()
+    endif()
     set(args "${fixture}")
     set(expected_exit 0)
     set(expected_stdout "No Extension:\n- bar\n- foo.\n\n")
@@ -127,6 +134,10 @@ else()
         ERROR_VARIABLE actual_stderr
     )
 endif()
+
+# std::cout writes CRLF line endings on Windows.
+string(REPLACE "\r\n" "\n" actual_stdout "${actual_stdout}")
+string(REPLACE "\r\n" "\n" actual_stderr "${actual_stderr}")
 
 set(failed FALSE)
 if (NOT actual_exit STREQUAL expected_exit)
