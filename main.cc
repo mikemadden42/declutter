@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <filesystem>
 #include <iostream>
@@ -17,6 +18,21 @@ void print_usage(const char* prog) {
               << "  -h, --help  Show this help message\n"
               << "  --          Treat all following arguments as paths\n"
               << "  path        Directory to inspect (default: current directory)\n";
+}
+
+std::string to_lower(std::string s) {
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+    return s;
+}
+
+// Alphabetical ignoring case; names differing only in case keep a fixed order.
+bool less_ignoring_case(const std::string& a, const std::string& b) {
+    std::string lower_a = to_lower(a);
+    std::string lower_b = to_lower(b);
+    if (lower_a != lower_b) return lower_a < lower_b;
+    return a < b;
 }
 
 }  // namespace
@@ -87,7 +103,9 @@ int main(int argc, char* argv[]) {
             if (!entry.is_regular_file(entry_ec)) continue;
             std::string name = entry.path().filename().string();
             if (!show_hidden && !name.empty() && name[0] == '.') continue;
-            std::string extension = entry.path().extension().string();
+            // Group case-insensitively, so ".JPG" and ".jpg" share a heading.
+            std::string extension =
+                to_lower(entry.path().extension().string());
             // "foo." has extension "."; group it with extensionless files.
             if (extension == ".") extension.clear();
             files_by_extension[extension].push_back(std::move(name));
@@ -98,7 +116,7 @@ int main(int argc, char* argv[]) {
     }
 
     for (auto& [extension, names] : files_by_extension) {
-        std::sort(names.begin(), names.end());
+        std::sort(names.begin(), names.end(), less_ignoring_case);
         std::string display_extension =
             extension.empty() ? "No Extension" : extension.substr(1);
         std::cout << display_extension << ":\n";

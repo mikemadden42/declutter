@@ -4,8 +4,8 @@ A small C++17 command-line utility that lists the files in a directory grouped b
 
 ## Features
 
-- Groups regular files by extension and prints them under per-extension headings.
-- Sorts files alphabetically within each group.
+- Groups regular files by extension and prints them under per-extension headings. Extensions are matched ignoring case, so `photo.JPG` and `scan.jpg` both appear under `jpg`.
+- Sorts files alphabetically within each group, ignoring case.
 - Skips hidden files (those whose name starts with `.`) by default; pass `-a` / `--all` to include them.
 - Files without an extension (including names ending in a bare `.`, like `foo.`) are listed under `No Extension`.
 - Accepts an optional directory path; defaults to the current directory.

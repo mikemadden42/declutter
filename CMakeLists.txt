@@ -79,7 +79,7 @@ endif()
 
 # Tests
 enable_testing()
-foreach (case grouping hidden trailing_dot empty_dir symlinks double_dash
+foreach (case grouping ignore_case hidden trailing_dot empty_dir symlinks double_dash
               dash_path_without_separator empty_arg missing_path
               not_a_directory unknown_option extra_argument help)
     add_test(NAME dcl_${case}

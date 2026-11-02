@@ -12,7 +12,7 @@
 - [x] **Throwing `is_regular_file()`**: A status error encountered mid-iteration (e.g. permission denied resolving a symlink) throws `filesystem_error`, aborting the entire listing. A plain dangling symlink does *not* throw (not-found is reported as a status, verified on macOS/libc++). Use the non-throwing `entry.is_regular_file(ec)` overload to skip the bad entry and continue.
 - [x] **Trailing-dot filename prints an empty heading**: For `foo.`, `extension()` returns `"."`, so `substr(1)` yields `""` and the group prints as a bare `:`. Treat `"."` like no extension, or display it literally.
 - [x] **Misleading "does not exist" error**: If `fs::exists(path, ec)` fails with an error (e.g. permission denied), the message still says the path does not exist. Report `ec.message()` when `ec` is set.
-- [ ] **Case-sensitive grouping and sorting**: `a.JPG` and `b.jpg` land in separate groups, and `Zeta.txt` sorts before `alpha.txt`. Consider case-insensitive grouping/sorting (or a flag for it).
+- [x] **Case-sensitive grouping and sorting**: `a.JPG` and `b.jpg` land in separate groups, and `Zeta.txt` sorts before `alpha.txt`. Consider case-insensitive grouping/sorting (or a flag for it).
 
 ## Robustness & Error Handling
 - [x] **Directory access handling**: Wrap directory iteration in `try-catch` blocks to handle `std::filesystem::filesystem_error` (e.g., permission denied, non-existent path).
