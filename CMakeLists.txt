@@ -131,6 +131,19 @@ endfunction()
 # Apply custom flags to your executable
 add_custom_flags(dcl)
 
+# Tests
+enable_testing()
+foreach (case grouping hidden trailing_dot empty_dir double_dash
+              dash_path_without_separator empty_arg missing_path
+              not_a_directory unknown_option extra_argument help)
+    add_test(NAME dcl_${case}
+        COMMAND ${CMAKE_COMMAND}
+            -DDCL=$<TARGET_FILE:dcl>
+            -DCASE=${case}
+            -DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/test-fixtures
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/dcl_test.cmake)
+endforeach()
+
 # macOS specific settings
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set_target_properties(dcl PROPERTIES

@@ -7,11 +7,11 @@
 ## Code Correctness (`main.cc`)
 - [x] **Undefined behavior on empty filename**: `entry.path().filename().string().front()` is UB if the filename string is empty. Use `starts_with('.')` (C++20) or check `!s.empty() && s[0] == '.'`.
 - [x] **Sort key mismatch**: Files are sorted by full `fs::path` but printed by `filename()` only. Sort on the displayed key so ordering matches output if path handling ever changes.
-- [ ] **Empty positional argument falls through**: An empty arg (`""`) bypasses the `argv[i][0] == '-'` check and is assigned as the path, only failing later at validation. Reject with a clearer message up front (e.g. check `*argv[i] == '\0'`).
-- [ ] **No `--` separator**: There's no way to pass a path that starts with `-` (e.g. a directory literally named `-foo`). Add the conventional `--` end-of-options marker.
-- [ ] **Throwing `is_regular_file()`**: A status error encountered mid-iteration (e.g. permission denied resolving a symlink) throws `filesystem_error`, aborting the entire listing. A plain dangling symlink does *not* throw (not-found is reported as a status, verified on macOS/libc++). Use the non-throwing `entry.is_regular_file(ec)` overload to skip the bad entry and continue.
-- [ ] **Trailing-dot filename prints an empty heading**: For `foo.`, `extension()` returns `"."`, so `substr(1)` yields `""` and the group prints as a bare `:`. Treat `"."` like no extension, or display it literally.
-- [ ] **Misleading "does not exist" error**: If `fs::exists(path, ec)` fails with an error (e.g. permission denied), the message still says the path does not exist. Report `ec.message()` when `ec` is set.
+- [x] **Empty positional argument falls through**: An empty arg (`""`) bypasses the `argv[i][0] == '-'` check and is assigned as the path, only failing later at validation. Reject with a clearer message up front (e.g. check `*argv[i] == '\0'`).
+- [x] **No `--` separator**: There's no way to pass a path that starts with `-` (e.g. a directory literally named `-foo`). Add the conventional `--` end-of-options marker.
+- [x] **Throwing `is_regular_file()`**: A status error encountered mid-iteration (e.g. permission denied resolving a symlink) throws `filesystem_error`, aborting the entire listing. A plain dangling symlink does *not* throw (not-found is reported as a status, verified on macOS/libc++). Use the non-throwing `entry.is_regular_file(ec)` overload to skip the bad entry and continue.
+- [x] **Trailing-dot filename prints an empty heading**: For `foo.`, `extension()` returns `"."`, so `substr(1)` yields `""` and the group prints as a bare `:`. Treat `"."` like no extension, or display it literally.
+- [x] **Misleading "does not exist" error**: If `fs::exists(path, ec)` fails with an error (e.g. permission denied), the message still says the path does not exist. Report `ec.message()` when `ec` is set.
 - [ ] **Case-sensitive grouping and sorting**: `a.JPG` and `b.jpg` land in separate groups, and `Zeta.txt` sorts before `alpha.txt`. Consider case-insensitive grouping/sorting (or a flag for it).
 
 ## Robustness & Error Handling
@@ -36,9 +36,9 @@
 - [ ] **`run-builds.ps1` dead code**: The pre-loop `New-Item` creating `$buildDir` is immediately wiped on the first iteration — remove it.
 
 ## Quality Assurance
-- [ ] **Automated Testing**: Implement a test suite to verify file grouping logic and error handling.
+- [x] **Automated Testing**: Implement a test suite to verify file grouping logic and error handling.
 - [ ] **CI/CD**: Expand the GitHub Actions workflow to run tests across different platforms.
 - [ ] **Update outdated CI actions**: `actions/checkout@v3` should be bumped to `@v4`.
-- [ ] **Drop or populate `ctest` step**: With no tests defined, `ctest -C Release` is a silent no-op; either add tests or remove the step until there are some.
+- [x] **Drop or populate `ctest` step**: With no tests defined, `ctest -C Release` is a silent no-op; either add tests or remove the step until there are some.
 - [ ] **Add a sanitizer CI job**: ASAN/UBSAN build types are defined locally but never exercised in CI. Add a job that builds and runs with `-DCMAKE_BUILD_TYPE=ASAN` (and/or UBSAN).
 
