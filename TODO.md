@@ -37,8 +37,8 @@
 
 ## Quality Assurance
 - [x] **Automated Testing**: Implement a test suite to verify file grouping logic and error handling.
-- [ ] **CI/CD**: Expand the GitHub Actions workflow to run tests across different platforms.
-- [ ] **Update outdated CI actions**: `actions/checkout@v3` should be bumped to `@v4`.
+- [x] **CI/CD**: Expand the GitHub Actions workflow to run tests across different platforms.
+- [x] **Update outdated CI actions**: `actions/checkout@v3` should be bumped to `@v4`.
 - [x] **Drop or populate `ctest` step**: With no tests defined, `ctest -C Release` is a silent no-op; either add tests or remove the step until there are some.
-- [ ] **Add a sanitizer CI job**: ASAN/UBSAN build types are defined locally but never exercised in CI. Add a job that builds and runs with `-DCMAKE_BUILD_TYPE=ASAN` (and/or UBSAN).
+- [x] **Add a sanitizer CI job**: ASAN/UBSAN build types are defined locally but never exercised in CI. Add a job that builds and runs with `-DCMAKE_BUILD_TYPE=ASAN` (and/or UBSAN).
 

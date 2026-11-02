@@ -83,9 +83,10 @@ foreach (case grouping hidden trailing_dot empty_dir symlinks double_dash
             -DCASE=${case}
             -DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/test-fixtures
             -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/dcl_test.cmake)
+    # Cases print "SKIPPED:" when the platform can't build their fixture,
+    # e.g. symlinks without privileges, or "foo." on Windows.
+    set_tests_properties(dcl_${case} PROPERTIES SKIP_REGULAR_EXPRESSION "SKIPPED:")
 endforeach()
-# Creating symlinks can fail without privileges (e.g. on Windows).
-set_tests_properties(dcl_symlinks PROPERTIES SKIP_REGULAR_EXPRESSION "SKIPPED:")
 
 # On macOS, build a universal binary unless the user chose architectures.
 if (APPLE AND NOT CMAKE_OSX_ARCHITECTURES)
