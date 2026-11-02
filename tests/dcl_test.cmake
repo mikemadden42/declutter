@@ -128,6 +128,10 @@ else()
     )
 endif()
 
+# std::cout writes CRLF line endings on Windows.
+string(REPLACE "\r\n" "\n" actual_stdout "${actual_stdout}")
+string(REPLACE "\r\n" "\n" actual_stderr "${actual_stderr}")
+
 set(failed FALSE)
 if (NOT actual_exit STREQUAL expected_exit)
     message(SEND_ERROR "exit code: expected ${expected_exit}, got ${actual_exit}")
