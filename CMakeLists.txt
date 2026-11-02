@@ -70,6 +70,10 @@ endif()
 
 # Add the executable
 add_executable(dcl main.cc)
+target_compile_definitions(dcl PRIVATE "DCL_VERSION=\"${PROJECT_VERSION}\"")
+
+# `cmake --install build` puts dcl in <prefix>/bin
+install(TARGETS dcl)
 
 if (MSVC)
     target_compile_options(dcl PRIVATE /W4)
@@ -81,11 +85,12 @@ endif()
 enable_testing()
 foreach (case grouping ignore_case hidden trailing_dot empty_dir symlinks double_dash
               dash_path_without_separator empty_arg missing_path
-              not_a_directory unknown_option extra_argument help)
+              not_a_directory unknown_option extra_argument help version)
     add_test(NAME dcl_${case}
         COMMAND ${CMAKE_COMMAND}
             -DDCL=$<TARGET_FILE:dcl>
             -DCASE=${case}
+            -DDCL_VERSION=${PROJECT_VERSION}
             -DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/test-fixtures
             -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/dcl_test.cmake)
     # Cases print "SKIPPED:" when the platform can't build their fixture,

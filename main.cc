@@ -10,12 +10,19 @@
 
 namespace fs = std::filesystem;
 
+// Set by CMake from project(VERSION); the fallback covers other builds.
+#ifndef DCL_VERSION
+#define DCL_VERSION "unknown"
+#endif
+
 namespace {
 
 void print_usage(const char* prog) {
-    std::cout << "Usage: " << prog << " [-a|--all] [-h|--help] [--] [path]\n"
+    std::cout << "Usage: " << prog
+              << " [-a|--all] [-h|--help] [--version] [--] [path]\n"
               << "  -a, --all   Include hidden files (those starting with '.')\n"
               << "  -h, --help  Show this help message\n"
+              << "  --version   Show the version and exit\n"
               << "  --          Treat all following arguments as paths\n"
               << "  path        Directory to inspect (default: current directory)\n";
 }
@@ -54,6 +61,9 @@ int main(int argc, char* argv[]) {
             } else if (std::strcmp(arg, "-h") == 0 ||
                        std::strcmp(arg, "--help") == 0) {
                 print_usage(argv[0]);
+                return 0;
+            } else if (std::strcmp(arg, "--version") == 0) {
+                std::cout << "dcl " << DCL_VERSION << "\n";
                 return 0;
             } else {
                 std::cerr << "Unknown option: " << arg << "\n";
