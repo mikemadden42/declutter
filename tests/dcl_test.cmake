@@ -43,6 +43,21 @@ elseif (CASE STREQUAL "empty_dir")
     set(args "${fixture}")
     set(expected_exit 0)
 
+elseif (CASE STREQUAL "symlinks")
+    file(WRITE "${fixture}/real.txt" "")
+    file(CREATE_LINK "real.txt" "${fixture}/link.txt"
+        RESULT link_result SYMBOLIC)
+    file(CREATE_LINK "missing.txt" "${fixture}/dangling.txt"
+        RESULT dangling_result SYMBOLIC)
+    if (NOT link_result EQUAL 0 OR NOT dangling_result EQUAL 0)
+        message("SKIPPED: cannot create symlinks: ${link_result} ${dangling_result}")
+        return()
+    endif()
+    # Links to regular files are listed; dangling links are skipped.
+    set(args "${fixture}")
+    set(expected_exit 0)
+    set(expected_stdout "txt:\n- link.txt\n- real.txt\n\n")
+
 elseif (CASE STREQUAL "double_dash")
     file(MAKE_DIRECTORY "${fixture}/-foo")
     file(WRITE "${fixture}/-foo/x.txt" "")
