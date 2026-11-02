@@ -29,11 +29,11 @@
 - [ ] **Inaccurate Release comment**: The comment says "assume -O2 is already present", but CMake's default Release flags are `-O3 -DNDEBUG`.
 
 ## Build Scripts
-- [ ] **`run-builds.bat` builds the wrong solution**: Line 30 invokes `msbuild dirsize.sln`, but this project's solution is `declutter.sln`. Switch to `cmake --build .` to match `run-builds.ps1`.
-- [ ] **`run-builds.bat` never detects failures**: `%errorlevel%` inside the parenthesized `for` block (lines 29, 31) is expanded once at parse time, so every build reports success. Use `!errorlevel!` (delayed expansion is already enabled) or `if errorlevel 1`.
-- [ ] **`run-builds.bash` lacks strict mode**: Add `set -euo pipefail` and quote `"$BUILD_DIR"` so a failed `cd` doesn't cause subsequent commands to run in the wrong directory. Caveat: `((success_count++))` returns status 1 when the counter is 0, so `set -e` would kill the script after the first success; switch to `success_count=$((success_count + 1))`. Also check the `cmake` configure exit code and use `cmake --build .` instead of `make`.
-- [ ] **`run-builds.ps1` hides compiler errors**: `$buildResult = cmake --build ...` captures and discards the build output, so failures print only "build failed." Let the output stream through. The configure step's exit code is also never checked.
-- [ ] **`run-builds.ps1` dead code**: The pre-loop `New-Item` creating `$buildDir` is immediately wiped on the first iteration — remove it.
+- [x] **`run-builds.bat` builds the wrong solution**: Line 30 invokes `msbuild dirsize.sln`, but this project's solution is `declutter.sln`. Switch to `cmake --build .` to match `run-builds.ps1`.
+- [x] **`run-builds.bat` never detects failures**: `%errorlevel%` inside the parenthesized `for` block (lines 29, 31) is expanded once at parse time, so every build reports success. Use `!errorlevel!` (delayed expansion is already enabled) or `if errorlevel 1`.
+- [x] **`run-builds.bash` lacks strict mode**: Add `set -euo pipefail` and quote `"$BUILD_DIR"` so a failed `cd` doesn't cause subsequent commands to run in the wrong directory. Caveat: `((success_count++))` returns status 1 when the counter is 0, so `set -e` would kill the script after the first success; switch to `success_count=$((success_count + 1))`. Also check the `cmake` configure exit code and use `cmake --build .` instead of `make`.
+- [x] **`run-builds.ps1` hides compiler errors**: `$buildResult = cmake --build ...` captures and discards the build output, so failures print only "build failed." Let the output stream through. The configure step's exit code is also never checked.
+- [x] **`run-builds.ps1` dead code**: The pre-loop `New-Item` creating `$buildDir` is immediately wiped on the first iteration — remove it.
 
 ## Quality Assurance
 - [x] **Automated Testing**: Implement a test suite to verify file grouping logic and error handling.
