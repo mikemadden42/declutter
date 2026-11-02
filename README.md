@@ -43,7 +43,7 @@ Selecting a build type the current compiler/platform can't support fails at conf
 
 On macOS a universal (`x86_64;arm64`) binary is built by default; pass `-DCMAKE_OSX_ARCHITECTURES=arm64` (or similar) to override.
 
-Helper scripts run every build type sequentially (types unsupported on the current platform are reported as failures):
+Helper scripts run every build type sequentially. Types the current platform can't build (e.g. `MSAN` on macOS) are reported as skipped and don't affect the exit status:
 
 - Linux/macOS: `./run-builds.bash`
 - Windows (cmd): `run-builds.bat`

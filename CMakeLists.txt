@@ -44,6 +44,20 @@ else()
     endif()
 endif()
 
+# Reject an explicitly requested unsupported type with any generator; the
+# run-builds scripts pass CMAKE_BUILD_TYPE even to multi-config generators
+# and look for the "Unsupported build type" prefix to report a skip.
+if (CMAKE_BUILD_TYPE)
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
+    if (build_type IN_LIST DCL_CUSTOM_BUILD_TYPES AND
+        NOT build_type IN_LIST DCL_SUPPORTED_BUILD_TYPES)
+        message(FATAL_ERROR
+            "Unsupported build type: ${CMAKE_BUILD_TYPE} is not supported "
+            "with ${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_NAME}. "
+            "Supported custom build types: ${DCL_SUPPORTED_BUILD_TYPES}")
+    endif()
+endif()
+
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if (is_multi_config)
     # Offer the supported custom types alongside the generator's defaults.
@@ -52,15 +66,6 @@ if (is_multi_config)
             list(APPEND CMAKE_CONFIGURATION_TYPES ${build_type})
         endif()
     endforeach()
-elseif (CMAKE_BUILD_TYPE)
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
-    if (build_type IN_LIST DCL_CUSTOM_BUILD_TYPES AND
-        NOT build_type IN_LIST DCL_SUPPORTED_BUILD_TYPES)
-        message(FATAL_ERROR
-            "Build type ${CMAKE_BUILD_TYPE} is not supported with "
-            "${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_NAME}. "
-            "Supported custom build types: ${DCL_SUPPORTED_BUILD_TYPES}")
-    endif()
 endif()
 
 # Add the executable
