@@ -7,7 +7,7 @@ A small C++17 command-line utility that lists the files in a directory grouped b
 - Groups regular files by extension and prints them under per-extension headings.
 - Sorts files alphabetically within each group.
 - Skips hidden files (those whose name starts with `.`) by default; pass `-a` / `--all` to include them.
-- Files without an extension are listed under `No Extension`.
+- Files without an extension (including names ending in a bare `.`, like `foo.`) are listed under `No Extension`.
 - Accepts an optional directory path; defaults to the current directory.
 
 ## Requirements
@@ -45,13 +45,24 @@ Helper scripts run every build type sequentially:
 - Windows (cmd): `run-builds.bat`
 - Windows (PowerShell): `./run-builds.ps1`
 
+## Testing
+
+Tests are CMake scripts driven by CTest; each case builds a fixture directory and checks `dcl`'s output and exit code:
+
+```bash
+cmake -B build
+cmake --build build
+cd build && ctest --output-on-failure
+```
+
 ## Usage
 
 ```
-dcl [-a|--all] [-h|--help] [path]
+dcl [-a|--all] [-h|--help] [--] [path]
 
   -a, --all   Include hidden files (those starting with '.')
   -h, --help  Show this help message
+  --          Treat all following arguments as paths
   path        Directory to inspect (default: current directory)
 ```
 
@@ -66,6 +77,9 @@ dcl ~/Downloads
 
 # Include hidden files
 dcl -a ~/Downloads
+
+# Inspect a directory whose name starts with '-'
+dcl -- -weird-name
 ```
 
 ### Example output
