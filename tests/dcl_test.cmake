@@ -121,6 +121,11 @@ elseif (CASE STREQUAL "help")
     set(expected_exit 0)
     set(stdout_regex "^Usage: ")
 
+elseif (CASE STREQUAL "version")
+    set(args "--version")
+    set(expected_exit 0)
+    set(expected_stdout "dcl ${DCL_VERSION}\n")
+
 else()
     message(FATAL_ERROR "Unknown test case: ${CASE}")
 endif()

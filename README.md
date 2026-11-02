@@ -22,7 +22,13 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-The resulting executable is `build/dcl`.
+The resulting executable is `build/dcl`. To install it into `<prefix>/bin`:
+
+```bash
+cmake --install build --prefix /usr/local
+```
+
+On Windows and other multi-config generators, add `--config Release` to both the build and install commands.
 
 ### Build types
 
@@ -62,10 +68,11 @@ cd build && ctest --output-on-failure
 ## Usage
 
 ```
-dcl [-a|--all] [-h|--help] [--] [path]
+dcl [-a|--all] [-h|--help] [--version] [--] [path]
 
   -a, --all   Include hidden files (those starting with '.')
   -h, --help  Show this help message
+  --version   Show the version and exit
   --          Treat all following arguments as paths
   path        Directory to inspect (default: current directory)
 ```

@@ -31,6 +31,12 @@ jobs:
       working-directory: build
       run: ctest -C Release --output-on-failure
 
+    - name: Install
+      shell: bash
+      run: |
+        cmake --install build --config Release --prefix install
+        ./install/bin/dcl --version
+
   sanitizers:
     name: ${{ matrix.build_type }} (${{ matrix.os }})
     strategy:
