@@ -19,14 +19,14 @@
 - [x] **Validation**: Ensure the provided path exists and is indeed a directory before processing.
 
 ## Build System (CMake)
-- [ ] **Refactor redundant flags**: Consolidate global `CMAKE_CXX_FLAGS_<TYPE>` settings and the `add_custom_flags` function to follow DRY (Don't Repeat Yourself) principles.
-- [ ] **Multi-config generator support**: Update the build logic to better support generators like Visual Studio and Xcode where `CMAKE_BUILD_TYPE` is not available at generation time.
-- [ ] **Use target-scoped warning flags**: Replace global `CMAKE_CXX_FLAGS = "-Wall -Wextra -pedantic"` with `target_compile_options(dcl PRIVATE ...)`. The current `set()` also clobbers any user-supplied `CXXFLAGS`.
-- [ ] **Bump `cmake_minimum_required`**: 3.10 is older than necessary; 3.16+ unlocks cleaner generator-expression patterns.
-- [ ] **MSan caveat**: MemorySanitizer requires an instrumented libc++ to avoid false positives. Either document this limitation or remove the MSAN build type.
-- [ ] **Broken MSVC flags**: MSVC does not support `/fsanitize=undefined`, so UBSAN cannot work there. `/COVERAGE` is not a `cl.exe` flag and `/DEBUG` is a linker flag. `target_compile_options(... "/O2 /DEBUG")` and `"/DEBUG /COVERAGE"` pass a single space-containing argument instead of two flags.
-- [ ] **Forced universal macOS build**: `OSX_ARCHITECTURES "x86_64;arm64"` overrides a user's `CMAKE_OSX_ARCHITECTURES`. MSAN is unsupported on macOS entirely, and TSAN with universal builds is fragile. Only default it when the user hasn't set one.
-- [ ] **Inaccurate Release comment**: The comment says "assume -O2 is already present", but CMake's default Release flags are `-O3 -DNDEBUG`.
+- [x] **Refactor redundant flags**: Consolidate global `CMAKE_CXX_FLAGS_<TYPE>` settings and the `add_custom_flags` function to follow DRY (Don't Repeat Yourself) principles.
+- [x] **Multi-config generator support**: Update the build logic to better support generators like Visual Studio and Xcode where `CMAKE_BUILD_TYPE` is not available at generation time.
+- [x] **Use target-scoped warning flags**: Replace global `CMAKE_CXX_FLAGS = "-Wall -Wextra -pedantic"` with `target_compile_options(dcl PRIVATE ...)`. The current `set()` also clobbers any user-supplied `CXXFLAGS`.
+- [x] **Bump `cmake_minimum_required`**: 3.10 is older than necessary; 3.16+ unlocks cleaner generator-expression patterns.
+- [x] **MSan caveat**: MemorySanitizer requires an instrumented libc++ to avoid false positives. Either document this limitation or remove the MSAN build type.
+- [x] **Broken MSVC flags**: MSVC does not support `/fsanitize=undefined`, so UBSAN cannot work there. `/COVERAGE` is not a `cl.exe` flag and `/DEBUG` is a linker flag. `target_compile_options(... "/O2 /DEBUG")` and `"/DEBUG /COVERAGE"` pass a single space-containing argument instead of two flags.
+- [x] **Forced universal macOS build**: `OSX_ARCHITECTURES "x86_64;arm64"` overrides a user's `CMAKE_OSX_ARCHITECTURES`. MSAN is unsupported on macOS entirely, and TSAN with universal builds is fragile. Only default it when the user hasn't set one.
+- [x] **Inaccurate Release comment**: The comment says "assume -O2 is already present", but CMake's default Release flags are `-O3 -DNDEBUG`.
 
 ## Build Scripts
 - [x] **`run-builds.bat` builds the wrong solution**: Line 30 invokes `msbuild dirsize.sln`, but this project's solution is `declutter.sln`. Switch to `cmake --build .` to match `run-builds.ps1`.

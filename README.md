@@ -13,7 +13,7 @@ A small C++17 command-line utility that lists the files in a directory grouped b
 ## Requirements
 
 - A C++17 compiler (GCC, Clang, or MSVC).
-- CMake 3.10 or newer.
+- CMake 3.16 or newer.
 
 ## Building
 
@@ -34,12 +34,16 @@ In addition to the standard `Debug`, `Release`, and `RelWithDebInfo`, the projec
 | `Release`       | Optimized build                                      |
 | `RelWithDebInfo`| Optimized build with debug symbols                   |
 | `ASAN`          | AddressSanitizer                                     |
-| `UBSAN`         | UndefinedBehaviorSanitizer                           |
-| `TSAN`          | ThreadSanitizer (not supported on MSVC)              |
-| `MSAN`          | MemorySanitizer (Clang only; needs instrumented libc++) |
-| `COVERAGE`      | Code coverage instrumentation                        |
+| `UBSAN`         | UndefinedBehaviorSanitizer (not on MSVC)             |
+| `TSAN`          | ThreadSanitizer (not on MSVC)                        |
+| `MSAN`          | MemorySanitizer (Clang on Linux only; needs instrumented libc++) |
+| `COVERAGE`      | Code coverage instrumentation (not on MSVC)          |
 
-Helper scripts run every build type sequentially:
+Selecting a build type the current compiler/platform can't support fails at configure time with a clear error. With multi-config generators (Visual Studio, Xcode, Ninja Multi-Config), only the supported types are offered, and you pick one at build time with `cmake --build build --config ASAN`.
+
+On macOS a universal (`x86_64;arm64`) binary is built by default; pass `-DCMAKE_OSX_ARCHITECTURES=arm64` (or similar) to override.
+
+Helper scripts run every build type sequentially (types unsupported on the current platform are reported as failures):
 
 - Linux/macOS: `./run-builds.bash`
 - Windows (cmd): `run-builds.bat`
