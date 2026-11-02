@@ -13,38 +13,36 @@ set /a failure_count=0
 set "successful_builds="
 set "failed_builds="
 
-:: Loop through each build type
+:: Loop through each build type.
+:: Inside this block, use "rem" rather than "::" for comments, and
+:: "if errorlevel 1" rather than %errorlevel%, which would be expanded
+:: once when the block is parsed instead of after each command runs.
 for %%B in (%BUILD_TYPES%) do (
     echo Building for type: %%B
 
-    :: Remove any existing build artifacts
+    rem Remove any existing build artifacts
     if exist %BUILD_DIR% rd /s /q %BUILD_DIR%
-    mkdir %BUILD_DIR%
-    cd %BUILD_DIR%
 
-    :: Run CMake with the current build type
-    cmake -DCMAKE_BUILD_TYPE=%%B ..
+    rem Run CMake with the current build type
+    cmake -S . -B %BUILD_DIR% -DCMAKE_BUILD_TYPE=%%B
 
-    :: Build the project
-    if %errorlevel% equ 0 (
-        msbuild dirsize.sln /p:Configuration=%%B
-        if %errorlevel% equ 0 (
-            echo %%B build succeeded.
-            set "successful_builds=!successful_builds! %%B"
-            set /a success_count+=1
-        ) else (
-            echo %%B build failed.
-            set "failed_builds=!failed_builds! %%B"
-            set /a failure_count+=1
-        )
-    ) else (
+    if errorlevel 1 (
         echo CMake configuration for %%B failed.
         set "failed_builds=!failed_builds! %%B"
         set /a failure_count+=1
+    ) else (
+        rem Build the project
+        cmake --build %BUILD_DIR% --config %%B
+        if errorlevel 1 (
+            echo %%B build failed.
+            set "failed_builds=!failed_builds! %%B"
+            set /a failure_count+=1
+        ) else (
+            echo %%B build succeeded.
+            set "successful_builds=!successful_builds! %%B"
+            set /a success_count+=1
+        )
     )
-
-    :: Go back to the root directory
-    cd ..
 )
 
 :: Report the summary of builds
